@@ -1,5 +1,6 @@
 require("dotenv").config();
 const path = require("path");
+const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -19,10 +20,11 @@ mongoose
         console.log("Database connected");
     });
 
+app.use(cors());
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "uploads")));
 
-app.use('/api/cart', require('./routes/cart'));
+app.use("/api/cart", require("./routes/cart"));
 app.use("/api/user", require("./routes/auth"));
 app.use("/api/admin", require("./routes/adminAuth"));
 app.use("/api/product", require("./routes/product"));
