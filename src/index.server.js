@@ -29,6 +29,7 @@ app.use("/api/user", require("./routes/auth"));
 app.use("/api/admin", require("./routes/adminAuth"));
 app.use("/api/product", require("./routes/product"));
 app.use("/api/category", require("./routes/category"));
+app.use("/api/initialdata", require("./routes/initialData"));
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);

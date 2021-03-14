@@ -1,7 +1,7 @@
 const slugify = require("slugify");
 const Category = require("../models/category");
 
-const createCategoryList = (categories, parentId = null) => {
+createCategoryList = (categories, parentId = null) => {
     const categoryList = [];
     let category;
     if (parentId == null) {
