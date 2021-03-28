@@ -13,15 +13,21 @@ exports.signup = async (req, res) => {
     });
     User.findOne({ email }).exec((error, user) => {
         if (error) {
-            return res.status(200).json({ status: false, message: "Something went wrong..", error });
+            return res
+                .status(200)
+                .json({ status: false, message: "Something went wrong..", error });
         } else if (user) {
             return res.status(200).json({ status: false, message: "Email already registerd.." });
         } else {
             _user.save((error, result) => {
                 if (error) {
-                    return res.status(200).json({ status: false, message: "Something went wrong..", error });
+                    return res
+                        .status(200)
+                        .json({ status: false, message: "Something went wrong..", error });
                 } else {
-                    return res.status(200).json({ status: true, message: "User created successfully..", result });
+                    return res
+                        .status(200)
+                        .json({ status: true, message: "User created successfully..", result });
                 }
             });
         }
@@ -30,12 +36,14 @@ exports.signup = async (req, res) => {
 
 exports.signin = (req, res) => {
     const { email, password } = req.body;
-    User.findOne({ email }).exec((error, user) => {
+    User.findOne({ email }).exec(async (error, user) => {
         if (error) {
-            return res.status(200).json({status: false, message: "Something went wrong..", error });
+            return res
+                .status(200)
+                .json({ status: false, message: "Something went wrong..", error });
         } else if (user) {
             const { _id, firstName, lastName, role, email, fullName } = user;
-            if (user.authenticate(password) && role === "user") {
+            if ((await user.authenticate(password)) && role === "user") {
                 const token = jwt.sign({ _id, role }, process.env.JWT_SECRET, { expiresIn: "10h" });
                 return res.status(200).json({
                     status: true,
@@ -50,10 +58,10 @@ exports.signin = (req, res) => {
                     },
                 });
             } else {
-                return res.status(200).json({status: false, message: "Invalid password" });
+                return res.status(200).json({ status: false, message: "Invalid password" });
             }
         } else {
-            return res.status(200).json({status: false, message: "Email not found.." });
+            return res.status(200).json({ status: false, message: "Email not found.." });
         }
     });
 };

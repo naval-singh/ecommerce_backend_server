@@ -29,7 +29,7 @@ exports.addCategory = (req, res) => {
         slug: slugify(name),
     };
     parentId && (categoryObj.parentId = parentId);
-    req.file && (categoryObj.categoryPicture = req.file.filename)
+    req.file && (categoryObj.categoryPicture = req.file.filename);
 
     const _category = new Category(categoryObj);
     _category.save((error, category) => {
@@ -52,4 +52,31 @@ exports.displayCategory = (req, res) => {
             return res.status(200).json({ status: true, categoryList });
         }
     });
+};
+
+exports.updateCategories = async (req, res) => {
+    const { _id, name, parentId, type } = req.body;
+    if (name instanceof Array) {
+        const updatedCategories = [];
+        for (let i = 0; i < name.length; i++) {
+            const category = {
+                name: name[i],
+                slug: slugify(name[i])
+            };
+            type[i] && (category.type = type[i]);
+            parentId[i] ? category.parentId = parentId[i] : category.parentId = undefined;
+            const updatedCategory = await Category.findOneAndUpdate({ _id: _id[i] }, category, { new: true });
+            updatedCategories.push(updatedCategory);
+        }
+        return res.status(200).json({ status: true, updatedCategories });
+    } else {
+        const category = {
+            name,
+            slug: slugify(name)
+        };
+        type && (category.type = type);
+        parentId ? category.parentId = parentId : category.parentId = undefined;
+        const updatedCategory = await Category.findOneAndUpdate({ _id }, category, { new: true });
+        return res.status(200).json({ status: true, updatedCategory });
+    }
 };

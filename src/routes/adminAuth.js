@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/signup", validateSignupRequest, isRequestValidated, adminSignup);
 router.post("/signin", validateSigninRequest, isRequestValidated, adminSignin);
-router.post("/signout", requireSignin, adminSignout);
+router.post("/signout", adminSignout);
 
 module.exports = router;
