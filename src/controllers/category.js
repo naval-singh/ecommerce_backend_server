@@ -80,3 +80,17 @@ exports.updateCategories = async (req, res) => {
         return res.status(200).json({ status: true, updatedCategory });
     }
 };
+
+exports.deleteCategories = async (req, res) => {
+    const {ids} = req.body;
+    const deletedCategories = []
+    for(let id of ids){
+        const deletedCategory = await Category.findOneAndDelete({_id: id})
+        deletedCategories.push(deletedCategory)
+    }
+    if(deletedCategories.length === ids.length){
+        return res.status(200).json({status: true, message: 'Categories deleted'})
+    }else{
+        return res.status(200).json({status: false, message: 'Something went wrong'})
+    }
+}
