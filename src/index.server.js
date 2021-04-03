@@ -27,6 +27,7 @@ app.use("/images", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/cart", require("./routes/cart"));
 app.use("/api/user", require("./routes/auth"));
+app.use("/api/page", require("./routes/page"));
 app.use("/api/admin", require("./routes/adminAuth"));
 app.use("/api/product", require("./routes/product"));
 app.use("/api/category", require("./routes/category"));

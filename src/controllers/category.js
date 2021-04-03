@@ -15,6 +15,7 @@ createCategoryList = (categories, parentId = null) => {
             name: cate.name,
             slug: cate.slug,
             parentId: cate.parentId,
+            type: cate.type,
             categoryPicture: cate.categoryPicture,
             children: createCategoryList(categories, cate._id),
         });
@@ -27,6 +28,7 @@ exports.addCategory = (req, res) => {
     const categoryObj = {
         name,
         slug: slugify(name),
+        type: 'product',
     };
     parentId && (categoryObj.parentId = parentId);
     req.file && (categoryObj.categoryPicture = req.file.filename);
