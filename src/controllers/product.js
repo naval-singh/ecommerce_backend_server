@@ -4,12 +4,13 @@ const Category = require("../models/category");
 
 exports.addProduct = (req, res) => {
     let productPictures = [];
-    const { name, price, quantity, description, category } = req.body;
+    const { name, price, listPrice, quantity, description, category } = req.body;
 
     const productObj = {
         name,
         slug: slugify(name),
         price,
+        listPrice,
         quantity,
         description,
         category,
@@ -51,25 +52,42 @@ exports.getProductsBySlug = (req, res) => {
             if (error) {
                 return res.status(200).json({ status: false, error });
             }
-            if(category){
-                Product.find({category}).exec((error, products)=>{
+            if (category) {
+                Product.find({ category }).exec((error, products) => {
                     if (error) {
                         return res.status(200).json({ status: false, error });
                     }
-                    if(products.length > 0){
+                    if (products.length > 0) {
                         return res.status(200).json({
                             status: true,
                             products,
                             productsByPrice: {
-                                under5k: products.filter(product => product.price <= 5000),
-                                under10k: products.filter(product => product.price > 5000 && product.price <= 10000),
-                                under15k: products.filter(product => product.price > 10000 && product.price <= 15000),
-                                under20k: products.filter(product => product.price > 15000 && product.price <= 20000),
-                                under30k: products.filter(product => product.price > 20000 && product.price <= 30000)
-                            }
+                                under5k: products.filter((product) => product.price <= 5000),
+                                under10k: products.filter((product) => product.price > 5000 && product.price <= 10000),
+                                under15k: products.filter((product) => product.price > 10000 && product.price <= 15000),
+                                under20k: products.filter((product) => product.price > 15000 && product.price <= 20000),
+                                under30k: products.filter((product) => product.price > 20000 && product.price <= 30000),
+                            },
                         });
                     }
-                })
+                });
+            }else{
+                return res.status(200).json({status: false, error: 'something went wrong'})
             }
         });
+};
+
+exports.getProductById = (req, res) => {
+    const { productId } = req.params;
+    if (productId) {
+        Product.findOne({ _id: productId }).exec((error, product) => {
+            if (error) {
+                return res.status(200).json({ status: false, error });
+            } else if (product) {
+                return res.status(200).json({ status: true, product });
+            }
+        });
+    } else {
+        return res.status(200).json({ status: false, error: "params are required" });
+    }
 };

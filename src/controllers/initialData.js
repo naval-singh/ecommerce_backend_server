@@ -1,3 +1,4 @@
+const Page = require("../models/page");
 const Product = require("../models/product");
 const Category = require("../models/category");
 
@@ -25,14 +26,20 @@ const createCategoryList = (categories, parentId = null) => {
 
 exports.initialData = async (req, res) => {
     const categories = await Category.find({}).exec();
+    const pages = await Page.find({})
+        .select("_id title description category banners products createdBy")
+        .populate({ path: "category", select: "_id name" })
+        .populate({ path: "createdBy", select: "_id firstName lastName" })
+        .exec();
     const products = await Product.find({})
-        .select("_id name price quantity productPictures description category createdBy")
-        .populate({path: 'category', select: '_id name'})
-        .populate({path: 'createdBy', select: '_id firstName lastName'})
+        .select("_id name price listPrice quantity productPictures description category createdBy")
+        .populate({ path: "category", select: "_id name" })
+        .populate({ path: "createdBy", select: "_id firstName lastName" })
         .exec();
     res.status(200).json({
         status: true,
         categories: createCategoryList(categories),
         products,
+        pages,
     });
 };

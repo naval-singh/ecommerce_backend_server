@@ -44,7 +44,8 @@ exports.signin = (req, res) => {
         } else if (user) {
             const { _id, firstName, lastName, role, email, fullName } = user;
             if ((await user.authenticate(password)) && role === "user") {
-                const token = jwt.sign({ _id, role }, process.env.JWT_SECRET, { expiresIn: "10h" });
+                const token = jwt.sign({ _id, role }, process.env.JWT_SECRET, { expiresIn: "7d" });
+                res.cookie("token", token, { expiresIn: "7d" });
                 return res.status(200).json({
                     status: true,
                     token,
@@ -64,4 +65,9 @@ exports.signin = (req, res) => {
             return res.status(200).json({ status: false, message: "Email not found.." });
         }
     });
+};
+
+exports.userSignout = (req, res) => {
+    res.clearCookie("token");
+    res.status(200).json({ status: true, message: "Signout successfully.." });
 };
