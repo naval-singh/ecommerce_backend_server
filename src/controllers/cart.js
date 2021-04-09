@@ -95,11 +95,11 @@ exports.getCartItems = (req, res) => {
 //                 condition = { user: req.user._id, "cartItems.product": cartItems.product };
 //                 updation = {
 //                     $set: {
-                        // "cartItems.$": {
-                        //     ...cartItems,
-                        //     quantity: item.quantity + cartItems.quantity,
-                        // },
-//                     },
+                    //     "cartItems.$": {
+                    //         ...cartItems,
+                    //         quantity: item.quantity + cartItems.quantity,
+                    //     },
+                    // },
 //                 };
 //             } else {
 //                 condition = { user: req.user._id };
